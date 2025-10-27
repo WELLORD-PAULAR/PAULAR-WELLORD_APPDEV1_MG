@@ -16,7 +16,7 @@ interface WeatherEntry {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, JsonPipe, WeatherForm, WeatherList],
+  imports: [CommonModule, WeatherForm, WeatherList],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
