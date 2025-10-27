@@ -1,0 +1,13 @@
+<ul class="list-group list-group-flush">
+  <li *ngFor="let it of items" class="list-group-item d-flex justify-content-between align-items-center" (click)="onSelect(it)" [class.active]="selected === it" style="cursor:pointer;">
+    <div>
+      <strong>{{ it.city }}</strong>
+      <div class="small text-muted">{{ it.description }}</div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge bg-secondary">{{ it.temperature !== null ? it.temperature + '°C' : '—' }}</span>
+      <button class="btn btn-sm btn-outline-danger" (click)="onRemove(it, $event)">Remove</button>
+    </div>
+  </li>
+</ul>
+<p *ngIf="items.length === 0" class="text-muted mt-3">No saved cities yet — add one above.</p>
