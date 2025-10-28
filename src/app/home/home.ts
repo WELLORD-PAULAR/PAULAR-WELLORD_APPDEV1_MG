@@ -1,92 +1,45 @@
 import { Component } from '@angular/core';
-import { CommonModule, JsonPipe } from '@angular/common';
-import { WeatherService } from '../weather-service/weather-service';
-import { firstValueFrom } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { WeatherForm } from '../weather-form/weather-form';
-import { WeatherList } from '../weather-list/weather-list';
-
-interface WeatherEntry {
-  city: string;
-  temperature: number | null;
-  description?: string;
-  icon?: string | null;
-  time?: string;
-  raw?: any;
-}
+import { WeatherService } from '../weather-service/weather-service';
+import { CityService } from '../city-service/city-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, WeatherForm, WeatherList],
+  imports: [CommonModule, WeatherForm, RouterModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
-  list: WeatherEntry[] = [];
-  filteredList: WeatherEntry[] = [];
-  selected: WeatherEntry | null = null;
+  constructor(
+    private weatherService: WeatherService,
+    private cityService: CityService,
+    private router: Router
+  ) {}
 
+  onAddCity(city: string) {
+    if (!city.trim()) return;
 
+    this.weatherService.getWeather(city).subscribe({
+      next: (weatherData) => {
+        if (weatherData.error) {
+          console.error('Weather API Error:', weatherData.error.info);
+          return;
+        }
 
-  onFilter(q: string) {
-    const query = (q || '').trim().toLowerCase();
-    if (!query) {
-      this.filteredList = this.list;
-      return;
-    }
-    this.filteredList = this.list.filter(i => i.city.toLowerCase().includes(query));
-  }
+        this.cityService.updateCityWeather(
+          weatherData.location?.name ?? city,
+          weatherData
+        );
 
-  select(item: WeatherEntry) {
-    this.selected = item;
-  }
-
-  remove(item: WeatherEntry, event?: Event) {
-    if (event) event.stopPropagation();
-    this.list = this.list.filter(i => i !== item);
-    this.filteredList = this.list;
-    if (this.selected === item) this.selected = this.list[0] || null;
-  }
-
-  constructor(private weatherService: WeatherService) {
-    // seed with an example so the page looks populated in demos
-    this.list = [];
-    this.filteredList = this.list;
-  }
-
-  async addCity(city: string | null | undefined) {
-    const name = (city || '').trim();
-    if (!name) return;
-
-    try {
-      // use the WeatherService which returns an Observable
-      const data = await firstValueFrom(this.weatherService.getWeather(name));
-      const entry: WeatherEntry = {
-        city: data.location?.name ?? name,
-        temperature: data.current?.temperature ?? null,
-        description: data.current?.weather_descriptions?.[0] ?? '',
-        icon: data.current?.weather_icons?.[0] ?? null,
-        time: data.location?.localtime ?? new Date().toLocaleString(),
-        raw: data,
-      };
-
-      const exists = this.list.find(i => i.city.toLowerCase() === entry.city.toLowerCase());
-      if (!exists) this.list.unshift(entry); else Object.assign(exists, entry);
-      this.filteredList = this.list;
-      this.selected = entry;
-    } catch (err) {
-      console.error('Weather fetch failed', err);
-      // fallback mocked entry so UX remains functional
-      const mock: WeatherEntry = {
-        city: name,
-        temperature: Math.round(5 + Math.random() * 20),
-        description: 'Mocked clear sky (offline)',
-        icon: null,
-        time: new Date().toLocaleString(),
-        raw: { error: true }
-      };
-      this.list.unshift(mock);
-      this.filteredList = this.list;
-      this.selected = mock;
-    }
+        // Navigate to cities list after successful addition
+        this.router.navigate(['/cities']);
+      },
+      error: (error) => {
+        console.error('Failed to fetch weather:', error);
+      }
+    });
   }
 }

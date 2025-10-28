@@ -1,4 +1,24 @@
-<div class="input-group mb-3">
-  <input #city class="form-control" placeholder="Enter city (e.g. London)" aria-label="city" />
-  <button class="btn btn-primary" type="button" (click)="onAdd(city)">Add / Preview</button>
-</div>
+<form (submit)="$event.preventDefault(); onAdd(city)" class="mb-3">
+  <div class="input-group">
+    <input #city
+           class="form-control"
+           [class.is-invalid]="error()"
+           placeholder="Enter city (e.g. London)"
+           aria-label="city" />
+    <button class="btn btn-primary"
+            type="submit"
+            [disabled]="loading()">
+      @if (loading()) {
+        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        Adding...
+      } @else {
+        Add City
+      }
+    </button>
+  </div>
+  @if (error()) {
+    <div class="invalid-feedback d-block">
+      {{ error() }}
+    </div>
+  }
+</form>

@@ -1,0 +1,63 @@
+<div class="container mt-4">
+  <h2 class="mb-4">City Weather List</h2>
+
+  @if (cities().length === 0) {
+    <div class="alert alert-info">
+      No cities added yet. Add a city to see its weather information.
+    </div>
+  } @else {
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      @for (city of cities(); track city.cityName) {
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">{{ city.cityName }}</h5>
+              <button class="btn btn-close" (click)="removeCity(city.cityName)" aria-label="Remove city"></button>
+            </div>
+
+            @if (city.weather.current) {
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                  @if (city.weather.current.weather_icons[0]) {
+                    <img [src]="city.weather.current.weather_icons[0]"
+                         alt="Weather icon"
+                         class="weather-icon me-2"
+                         style="width: 50px; height: 50px; object-fit: contain;">
+                  }
+                  <div>
+                    <h6 class="mb-0">{{ city.weather.current.temperature }}°C</h6>
+                    <p class="text-muted mb-0">{{ city.weather.current.weather_descriptions[0] }}</p>
+                  </div>
+                </div>
+
+                <div class="weather-details">
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <small class="text-muted">Humidity</small>
+                      <p class="mb-2">{{ city.weather.current.humidity }}%</p>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-muted">Wind</small>
+                      <p class="mb-2">{{ city.weather.current.wind_speed }} km/h</p>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-muted">Pressure</small>
+                      <p class="mb-2">{{ city.weather.current.pressure }} mb</p>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-muted">Feels Like</small>
+                      <p class="mb-2">{{ city.weather.current.feelslike }}°C</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-muted">
+                <small>Last updated: {{ formatDate(city.lastUpdated) }}</small>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

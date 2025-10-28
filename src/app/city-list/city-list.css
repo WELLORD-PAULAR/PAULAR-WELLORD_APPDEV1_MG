@@ -1,0 +1,37 @@
+.card {
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.weather-icon {
+  border-radius: 8px;
+}
+
+.weather-details {
+  background-color: rgba(0,0,0,0.02);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.btn-close {
+  opacity: 0.5;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.btn-close:hover {
+  opacity: 1;
+}
+
+.card-header {
+  background-color: rgba(0,0,0,0.03);
+}
+
+.text-muted {
+  font-size: 0.875rem;
+}

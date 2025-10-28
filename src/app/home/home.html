@@ -1,172 +1,67 @@
 <div class="container">
-	<header class="py-4 mb-4 border-bottom">
-		<div class="d-flex align-items-center gap-3">
-			<img src="/assets/jupiter-logo.png" alt="Jupiter logo" class="rounded-circle" width="56" height="56" onerror="this.style.display='none'" />
-			<div>
-				<h1 class="h3 mb-0">Jupiter</h1>
-				<small class="text-muted">Track weather across cities — store, search and preview forecasts</small>
-			</div>
-		</div>
-	</header>
+  <header class="py-4 mb-4 border-bottom">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <img src="/assets/apollo-logo.png" alt="Apollo logo" class="rounded-circle" width="56" height="56" onerror="this.style.display='none'" />
+        <div>
+          <h1 class="h3 mb-0">Apollo</h1>
+          <small class="text-muted">Track weather across your favorite cities</small>
+        </div>
+      </div>
+      <a routerLink="/cities" class="btn btn-outline-primary">View Saved Cities</a>
+    </div>
+  </header>
 
-	<div class="row">
-		<div class="col-lg-5">
-			<section class="card mb-4">
-				<div class="card-body">
-					<h5 class="card-title">Add / Search City</h5>
-				<app-weather-form (add)="addCity($event)"></app-weather-form>
-				<div class="mb-3 mt-3">
-					<input type="text" class="form-control" placeholder="Filter saved cities" (input)="onFilter($event.target.value)" />
-				</div>
-				<h6 class="mt-3">Saved Cities</h6>
-				<app-weather-list [items]="filteredList" [selected]="selected" (select)="select($event)" (remove)="remove($event)"></app-weather-list>
-				</div>
-			</section>
-		</div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <section class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Add New City</h5>
+          <app-weather-form (add)="onAddCity($event)"></app-weather-form>
+        </div>
+      </section>
 
-		<div class="col-lg-7">
-			<section class="card mb-4">
-				<div class="card-body">
-					<h5 class="card-title">Preview</h5>
-					<div *ngIf="selected; else none">
-						<div class="row g-3 align-items-center mb-4">
-							<div class="col-auto">
-								<img *ngIf="selected.icon" [src]="selected.icon" class="img-fluid rounded-circle shadow-sm" alt="Weather icon" style="width:80px; height:80px;" />
-							</div>
-							<div class="col">
-								<h3 class="mb-1">{{ selected.city }}</h3>
-								<div class="d-flex align-items-baseline gap-2">
-									<span class="display-4 fw-bold">{{ selected.temperature !== null ? selected.temperature + '°C' : 'N/A' }}</span>
-									<span class="fs-5 text-muted">{{ selected.description }}</span>
-								</div>
-								<small class="text-muted d-block mb-3">Last updated: {{ selected.time }}</small>
-							</div>
-						</div>
+      <section class="mt-5">
+        <h4 class="mb-4">Features</h4>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light">
+              <div class="card-body">
+                <h5 class="card-title">Real-Time Weather</h5>
+                <p class="card-text">Get instant access to current weather conditions for any city worldwide using the WeatherStack API.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light">
+              <div class="card-body">
+                <h5 class="card-title">City Management</h5>
+                <p class="card-text">Save your favorite cities for quick access to their weather information anytime.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light">
+              <div class="card-body">
+                <h5 class="card-title">Detailed Information</h5>
+                <p class="card-text">Access comprehensive weather data including temperature, humidity, wind conditions, and more.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card h-100 border-0 bg-light">
+              <div class="card-body">
+                <h5 class="card-title">Easy Updates</h5>
+                <p class="card-text">Weather information is automatically updated when you check your saved cities.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
 
-						@if (selected.raw?.current) {
-						<div class="row row-cols-2 row-cols-md-3 g-3 mb-4">
-							<div class="col">
-								<div class="card h-100 bg-light border-0">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-1 text-muted">Feels Like</h6>
-										<p class="card-text fs-5">{{ selected.raw.current.feelslike }}°C</p>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card h-100 bg-light border-0">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-1 text-muted">Humidity</h6>
-										<p class="card-text fs-5">{{ selected.raw.current.humidity }}%</p>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card h-100 bg-light border-0">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-1 text-muted">Wind</h6>
-										<p class="card-text fs-5">{{ selected.raw.current.wind_speed }} km/h</p>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card h-100 bg-light border-0">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-1 text-muted">Pressure</h6>
-										<p class="card-text fs-5">{{ selected.raw.current.pressure }} mb</p>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card h-100 bg-light border-0">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-1 text-muted">UV Index</h6>
-										<p class="card-text fs-5">{{ selected.raw.current.uv_index }}</p>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card h-100 bg-light border-0">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-1 text-muted">Visibility</h6>
-										<p class="card-text fs-5">{{ selected.raw.current.visibility }} km</p>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="row g-3">
-							<div class="col-md-6">
-								<div class="card bg-light border-0">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-2 text-muted">Location Details</h6>
-										@if (selected.raw.location) {
-											<p class="card-text mb-1">
-												<strong>Region:</strong> {{ selected.raw.location.region }}, {{ selected.raw.location.country }}
-											</p>
-											<p class="card-text mb-1">
-												<strong>Coordinates:</strong> {{ selected.raw.location.lat }}, {{ selected.raw.location.lon }}
-											</p>
-											<p class="card-text mb-0">
-												<strong>Timezone:</strong> {{ selected.raw.location.timezone_id }}
-											</p>
-										}
-									</div>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="card bg-light border-0">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-2 text-muted">Wind Details</h6>
-										@if (selected.raw.current) {
-											<p class="card-text mb-1">
-												<strong>Direction:</strong> {{ selected.raw.current.wind_dir }} ({{ selected.raw.current.wind_degree }}°)
-											</p>
-											<p class="card-text mb-1">
-												<strong>Speed:</strong> {{ selected.raw.current.wind_speed }} km/h
-											</p>
-											<p class="card-text mb-0">
-												<strong>Cloud Cover:</strong> {{ selected.raw.current.cloudcover }}%
-											</p>
-										}
-									</div>
-								</div>
-							</div>
-						</div>
-						}
-					</div>
-					<ng-template #none>
-						<div class="text-center py-5">
-							<div class="mb-3">
-								<i class="bi bi-cloud-sun fs-1 text-muted"></i>
-							</div>
-							<p class="text-muted">Select a saved city to preview detailed weather information.</p>
-						</div>
-					</ng-template>
-				</div>
-			</section>
-
-			<section id="features" class="mb-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Features</h5>
-						<ul>
-							<li>Search and add current weather for cities.</li>
-							<li>Save multiple cities for quick lookups.</li>
-							<li>Preview details and raw API response.</li>
-							<li>Uses Weatherstack API when API key is configured; otherwise uses a mocked preview for demos.</li>
-						</ul>
-					</div>
-				</div>
-			</section>
-		</div>
-	</div>
-
-	<footer id="about" class="pt-4 mt-4 border-top">
-		<div class="d-flex justify-content-between">
-			<small class="text-muted">© {{ 'Jupiter' }} • Weather Tracker</small>
-			<small class="text-muted">Built with Bootstrap</small>
-		</div>
-	</footer>
+  <footer class="py-4 mt-5 border-top text-center">
+    <small class="text-muted">© 2025 Weather Tracker • Built with Angular and Bootstrap</small>
+  </footer>
 </div>
-
